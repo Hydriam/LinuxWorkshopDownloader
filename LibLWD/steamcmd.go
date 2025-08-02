@@ -1,4 +1,4 @@
-package main
+package libLWD
 
 import (
 	"context"
@@ -11,11 +11,11 @@ import (
 	"github.com/codeclysm/extract/v4"
 )
 
-func getSteamcmd() error {
+func GetSteamcmd() error {
 	//Thanks for https://gist.github.com/cnu/026744b1e86c6d9e22313d06cba4c2e9
 
 	//Download the archive with steamcmd binaries
-	fmt.Println("Downloading steamcmd")
+	fmt.Println("Downloading steamcmd.")
 
 	out, err := os.Create("steamcmd.tar.gz")
 	if err != nil {
@@ -34,9 +34,9 @@ func getSteamcmd() error {
 		return err
 	}
 
-	fmt.Println("Steamcmd Downloaded")
+	fmt.Println("Steamcmd Downloaded.")
 	//Extract the archive
-	fmt.Println("Extracting Steamcmd")
+	fmt.Println("Extracting Steamcmd.")
 
 	_, err = os.Stat("steamcmd")
 	if os.IsNotExist(err) {
@@ -58,31 +58,34 @@ func getSteamcmd() error {
 	}
 	defer file.Close()
 	os.Remove("steamcmd.tar.gz")
-	fmt.Println("Downloaded Steamcmd Succesfully")
+	fmt.Println("Downloaded Steamcmd Succesfully.")
 	return nil
 }
 
-// workshopID = ID of workshop mod
-// appID = appID of game the mod belongs to
-func downloadFromSteamcmd(appID string, workshopID string) error {
-	//TODO : implement downloading multiple element in one instance of steamcmd.sh
-	// The command
-	cmd := exec.Command(
+func DownloadFromSteamcmd(appID string, workshopIDs []string, debug bool) error {
+	fmt.Println("Downloading from steamcmd.")
+	// cmdt = command template
+	cmdt := []string{
 		"./steamcmd/steamcmd.sh",
 		"+login", "anonymous",
-		"+workshop_download_item", appID, workshopID,
-
-		"+quit",
-	)
-	// Redirect command output to our output
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	}
+	for i := 0; i < len(workshopIDs); i++ {
+		cmdt = append(cmdt, "+workshop_download_item", appID, workshopIDs[i])
+	}
+	cmdt = append(cmdt, "+quit")
+	cmd := exec.Command(cmdt[0], cmdt[1:]...) //cmdt[1:]... makes it use every object in array
+	// Debug Mode
+	if debug {
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+	}
 	// Run the command
 	err := cmd.Run()
 	if err != nil {
 		fmt.Println("Steamcmd Failed.")
 		return err
 	}
-	fmt.Println("The file has been downloaded")
+	fmt.Println("The file has been downloaded.")
+	fmt.Println("It should be under ~/.local/share/Steam/steamapps/workshop/")
 	return nil
 }
