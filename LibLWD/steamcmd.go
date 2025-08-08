@@ -83,6 +83,7 @@ func DownloadFromSteamcmd(appID string, workshopIDs []string, debug bool) error 
 	err := cmd.Run()
 	if err != nil {
 		fmt.Println("Steamcmd Failed.")
+		fmt.Println("Make sure that you have 32bit version of glibc installed on your system.")
 		return err
 	}
 	fmt.Println("The file has been downloaded.")
