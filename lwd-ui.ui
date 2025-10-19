@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Cambalache 0.96.1 -->
+<interface>
+  <!-- interface-name lwd-ui.ui -->
+  <requires lib="gtk" version="4.18"/>
+  <object class="GtkWindow" id="mainWindow">
+    <child>
+      <object class="GtkBox" id="mainBox">
+        <property name="margin-bottom">10</property>
+        <property name="margin-end">15</property>
+        <property name="margin-start">15</property>
+        <property name="margin-top">10</property>
+        <child>
+          <object class="GtkBox" id="leftBox">
+            <property name="orientation">vertical</property>
+            <property name="spacing">10</property>
+            <child>
+              <object class="GtkEntry" id="gameAppID">
+                <property name="placeholder-text">Game AppID</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="downloadButton">
+                <property name="label">Download</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="RightBox">
+            <property name="halign">end</property>
+            <property name="hexpand">True</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">10</property>
+            <property name="valign">start</property>
+            <child>
+              <object class="GtkBox" id="modBox">
+                <child>
+                  <object class="GtkEntry" id="modAppID">
+                    <property name="placeholder-text">Mod AppID</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="addButton">
+                    <property name="label">Add</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkListView" id="modList">
+                <property name="hexpand">True</property>
+                <property name="model">
+                  <object class="GtkSingleSelection" id="modListSelection">
+                    <property name="model">
+                      <object class="GtkStringList" id="modListStrings"/>
+                    </property>
+                  </object>
+                </property>
+                <property name="vexpand">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
