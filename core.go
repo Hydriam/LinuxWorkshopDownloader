@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	libLWD "github.com/Hydriam/LinuxWorkshopDownloader/LibLWD"
+	"github.com/diamondburned/gotk4-adwaita/pkg/adw"
 	"github.com/diamondburned/gotk4/pkg/gio/v2"
 	"github.com/diamondburned/gotk4/pkg/glib/v2"
 	"github.com/diamondburned/gotk4/pkg/gtk/v4"
@@ -26,6 +27,7 @@ func activate(app *gtk.Application) {
 	// When we get mainWindow are childs work but they dont have variables assigned to them
 	// So for some widgets we need to get them separately
 	mainWindow := builder.GetObject("mainWindow").Cast().(*gtk.Window)
+	mainWindow.SetDefaultSize(400, 200)
 	// entry with mod app id
 	modAppID := builder.GetObject("modAppID").Cast().(*gtk.Entry)
 	// entry with game app id
@@ -72,17 +74,34 @@ func activate(app *gtk.Application) {
 	// download button
 	downloadButton := builder.GetObject("downloadButton").Cast().(*gtk.Button)
 	downloadButton.ConnectClicked(func() {
-		if gameAppID.Text() == "" {
+		exists := libLWD.CheckSteamcmd()
+		if exists == false {
+			alertDialog := adw.NewAlertDialog("Steamcmd not installed", "Would you like the program to install it?")
+			alertDialog.AddResponse("yes", "Yes")
+			alertDialog.AddResponse("no", "No")
+			alertDialog.SetDefaultResponse("yes")
+			alertDialog.SetCloseResponse("no")
+			alertDialog.ConnectResponse(func(response string) {
+				if response == "yes" {
+					go libLWD.GetSteamcmd()
+				} else {
+
+				}
+			})
+			alertDialog.Present(mainWindow)
 			return
-		} else {
+			// CRITICAL TODO: make the program wait till getSteamcmd ends and then downloads mods, now when just get steacmd without downloading mods
+		}
+		if gameAppID.Text() == "" {
 			fmt.Println("Error: gameAppID is empty")
+			return
 		}
 		var workshopIDs []string
 		for i := 0; i < int(modListStrings.NItems()); i++ {
 			workshopIDs = append(workshopIDs, modListStrings.String(uint(i)))
 		}
 		//fmt.Println(workshopIDs)
-		libLWD.DownloadFromSteamcmd(gameAppID.Text(),
+		go libLWD.DownloadFromSteamcmd(gameAppID.Text(),
 			workshopIDs,
 			true)
 	})

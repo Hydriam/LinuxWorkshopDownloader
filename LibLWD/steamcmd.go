@@ -61,8 +61,14 @@ func GetSteamcmd() error {
 	fmt.Println("Downloaded Steamcmd Succesfully.")
 	return nil
 }
+func CheckSteamcmd() bool {
+	// This function checks if steamcmd is downloaded
+	_, err := os.Stat("steamcmd/steamcmd.sh")
+	return err == nil
+}
 
 func DownloadFromSteamcmd(appID string, workshopIDs []string, debug bool) error {
+	//TODO: proper logging, save all the output to a log file, if there is a error just display a adw alert dialog
 	fmt.Println("Downloading from steamcmd.")
 	// cmdt = command template
 	cmdt := []string{
