@@ -1,7 +1,7 @@
 # LinuxWorkshopDownloader
 A Linux Gui App For Downloading Steam Workshop Elements
 
-The app is still work-in-progress
+*The app is still work-in-progress*
 ## What this does?
 This tool can download mods from steam workshop using steamcmd,
 This is uselful if you have a game on gog which most modding community is on steam workshop
