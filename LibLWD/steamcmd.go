@@ -2,21 +2,20 @@ package libLWD
 
 import (
 	"context"
-	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"os/exec"
 
 	"github.com/codeclysm/extract/v4"
+	"github.com/diamondburned/gotk4-adwaita/pkg/adw"
 )
 
 func GetSteamcmd() error {
 	//Thanks for https://gist.github.com/cnu/026744b1e86c6d9e22313d06cba4c2e9
 
 	//Download the archive with steamcmd binaries
-	fmt.Println("Downloading steamcmd.")
-
 	out, err := os.Create("steamcmd.tar.gz")
 	if err != nil {
 		return err
@@ -33,10 +32,6 @@ func GetSteamcmd() error {
 	if err != nil {
 		return err
 	}
-
-	fmt.Println("Steamcmd Downloaded.")
-	//Extract the archive
-	fmt.Println("Extracting Steamcmd.")
 
 	_, err = os.Stat("steamcmd")
 	if os.IsNotExist(err) {
@@ -58,7 +53,7 @@ func GetSteamcmd() error {
 	}
 	defer file.Close()
 	os.Remove("steamcmd.tar.gz")
-	fmt.Println("Downloaded Steamcmd Succesfully.")
+	adw.NewAboutDialog()
 	return nil
 }
 func CheckSteamcmd() bool {
@@ -67,9 +62,20 @@ func CheckSteamcmd() bool {
 	return err == nil
 }
 
-func DownloadFromSteamcmd(appID string, workshopIDs []string, debug bool) error {
+func DownloadFromSteamcmd(appID string, workshopIDs []string) error {
 	//TODO: proper logging, save all the output to a log file, if there is a error just display a adw alert dialog
-	fmt.Println("Downloading from steamcmd.")
+	logFile, err := os.Create("steamcmd.log") // Create or overwrite the log file
+	if err != nil {
+		return err
+	}
+	defer logFile.Close()
+	// Start logging
+	logger := log.New(logFile, "", log.LstdFlags)
+	logger.Println("=== SteamCMD Download Started ===")
+	logger.Printf("App ID: %s\n", appID)
+	logger.Printf("Workshop IDs: %v\n", workshopIDs)
+
+	logger.Println("Download is starting:")
 	// cmdt = command template
 	cmdt := []string{
 		"./steamcmd/steamcmd.sh",
@@ -80,19 +86,17 @@ func DownloadFromSteamcmd(appID string, workshopIDs []string, debug bool) error 
 	}
 	cmdt = append(cmdt, "+quit")
 	cmd := exec.Command(cmdt[0], cmdt[1:]...) //cmdt[1:]... makes it use every object in array
-	// Debug Mode
-	if debug {
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-	}
+	// Redirect output of the command to log file
+	cmd.Stdout = logFile
+	cmd.Stderr = logFile
 	// Run the command
-	err := cmd.Run()
+	err = cmd.Run()
 	if err != nil {
-		fmt.Println("Steamcmd Failed.")
-		fmt.Println("Make sure that you have 32bit version of glibc installed on your system.")
+		logger.Println("Steamcmd Failed.")
+		logger.Println("Make sure that you have 32bit version of glibc installed on your system.")
 		return err
 	}
-	fmt.Println("The file has been downloaded.")
-	fmt.Println("It should be under ~/.local/share/Steam/steamapps/workshop/")
+	logger.Println("The file should be downloaded.")
+	logger.Println("It should be under ~/.local/share/Steam/steamapps/workshop/")
 	return nil
 }

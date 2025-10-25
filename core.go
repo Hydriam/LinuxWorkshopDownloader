@@ -75,7 +75,7 @@ func activate(app *gtk.Application) {
 	downloadButton := builder.GetObject("downloadButton").Cast().(*gtk.Button)
 	downloadButton.ConnectClicked(func() {
 		exists := libLWD.CheckSteamcmd()
-		if exists == false {
+		if !exists {
 			alertDialog := adw.NewAlertDialog("Steamcmd not installed", "Would you like the program to install it?")
 			alertDialog.AddResponse("yes", "Yes")
 			alertDialog.AddResponse("no", "No")
@@ -85,12 +85,11 @@ func activate(app *gtk.Application) {
 				if response == "yes" {
 					go libLWD.GetSteamcmd()
 				} else {
-
 				}
 			})
 			alertDialog.Present(mainWindow)
 			return
-			// CRITICAL TODO: make the program wait till getSteamcmd ends and then downloads mods, now when just get steacmd without downloading mods
+			// TODO: make the program wait till getSteamcmd ends and then downloads mods, now it just gets steamcmd without downloading mods
 		}
 		if gameAppID.Text() == "" {
 			fmt.Println("Error: gameAppID is empty")
@@ -102,8 +101,7 @@ func activate(app *gtk.Application) {
 		}
 		//fmt.Println(workshopIDs)
 		go libLWD.DownloadFromSteamcmd(gameAppID.Text(),
-			workshopIDs,
-			true)
+			workshopIDs)
 	})
 	// set modListFactory as the factory for mod list
 	modList.SetFactory(&modListFactory.ListItemFactory)
