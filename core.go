@@ -48,6 +48,9 @@ func activate(app *gtk.Application) {
 		obj := listitem.Cast().(*gtk.ListItem).Item().Cast().(*gtk.StringObject)
 		listitem.Cast().(*gtk.ListItem).Child().(*gtk.Label).SetText(obj.String())
 	})
+	modList.ConnectActivate(func(position uint) {
+		modListStrings.Remove(position)
+	})
 	// add button
 	addButton := builder.GetObject("addButton").Cast().(*gtk.Button)
 	addButton.ConnectClicked(func() {
