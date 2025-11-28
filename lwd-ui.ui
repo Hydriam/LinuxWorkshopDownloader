@@ -15,11 +15,6 @@
             <property name="orientation">vertical</property>
             <property name="spacing">10</property>
             <child>
-              <object class="GtkEntry" id="gameAppID">
-                <property name="placeholder-text">Game AppID</property>
-              </object>
-            </child>
-            <child>
               <object class="GtkButton" id="downloadButton">
                 <property name="label">Download</property>
               </object>

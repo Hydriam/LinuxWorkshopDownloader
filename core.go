@@ -30,8 +30,6 @@ func activate(app *gtk.Application) {
 	mainWindow.SetDefaultSize(400, 200)
 	// entry with mod app id
 	modAppID := builder.GetObject("modAppID").Cast().(*gtk.Entry)
-	// entry with game app id
-	gameAppID := builder.GetObject("gameAppID").Cast().(*gtk.Entry)
 	// list of the mods to download
 	modList := builder.GetObject("modList").Cast().(*gtk.ListView)
 	// the string list for the mod list
@@ -94,17 +92,32 @@ func activate(app *gtk.Application) {
 			return
 			// TODO: make the program wait till getSteamcmd ends and then downloads mods, now it just gets steamcmd without downloading mods
 		}
-		if gameAppID.Text() == "" {
-			fmt.Println("Error: gameAppID is empty")
-			return
-		}
-		var workshopIDs []string
-		for i := 0; i < int(modListStrings.NItems()); i++ {
-			workshopIDs = append(workshopIDs, modListStrings.String(uint(i)))
-		}
-		//fmt.Println(workshopIDs)
-		go libLWD.DownloadFromSteamcmd(gameAppID.Text(),
-			workshopIDs)
+		dialog := gtk.NewDialog()
+		dialog.SetTitle("Game App ID")
+		dialog.SetDefaultSize(450, 100)
+		dialog.AddButton("Done", int(gtk.ResponseOK))
+		gameAppIDL := gtk.NewLabel("Please provide App ID of the game that mods belong to:") // gameAppIDL(abel)
+		gameAppIDE := gtk.NewEntry()                                                         // gameAppIDE(ntry)
+		contentArea := dialog.ContentArea()
+		contentArea.Append(gameAppIDL)
+		contentArea.Append(gameAppIDE)
+		dialog.Show()
+		var gameAppID string
+		dialog.Connect("response", func(d *gtk.Dialog, resp int) {
+			if resp == int(gtk.ResponseOK) {
+				gameAppID = gameAppIDE.Text()
+				//fmt.Println("test ", gameAppID)
+				//gameAppID :=
+				var workshopIDs []string
+				for i := 0; i < int(modListStrings.NItems()); i++ {
+					workshopIDs = append(workshopIDs, modListStrings.String(uint(i)))
+				}
+				//fmt.Println(workshopIDs)
+				go libLWD.DownloadFromSteamcmd(gameAppID,
+					workshopIDs)
+			}
+			dialog.Destroy()
+		})
 	})
 	// set modListFactory as the factory for mod list
 	modList.SetFactory(&modListFactory.ListItemFactory)
