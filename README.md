@@ -20,8 +20,8 @@ To remove an element from the list double-click it
 This app is writen in golang, uses gotk4 and cambalache for gui, and codeclysm/extract for extracting steamcmd.
 To build run:
 ```
-git clone https://github.com/Hydriam/LinuxWorkshopDownloader/
-cd LinuxWorkshopDownloader
-go build -o LinuxWorkshopDownloader
+git clone https://github.com/Hydriam/WorkshopFetcher/
+cd WorkshopFetcher
+go build -o WorkshopFetcher
 ```
 You need golang installed on your linux system.
