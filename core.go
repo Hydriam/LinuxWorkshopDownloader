@@ -5,7 +5,7 @@ import (
 	"os"
 	"strconv"
 
-	libLWD "github.com/Hydriam/LinuxWorkshopDownloader/LibLWD"
+	libLWD "github.com/Hydriam/WorkshopFetcher/LibLWD"
 	"github.com/diamondburned/gotk4-adwaita/pkg/adw"
 	"github.com/diamondburned/gotk4/pkg/gio/v2"
 	"github.com/diamondburned/gotk4/pkg/glib/v2"
@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	app := gtk.NewApplication("com.github.Hydriam.LinuxWorkshopDownloader", gio.ApplicationFlagsNone)
+	app := gtk.NewApplication("com.github.Hydriam.WorkshopFetcher", gio.ApplicationFlagsNone)
 	app.ConnectActivate(func() { activate(app) })
 
 	if code := app.Run(os.Args); code > 0 {
@@ -28,6 +28,7 @@ func activate(app *gtk.Application) {
 	// So for some widgets we need to get them separately
 	mainWindow := builder.GetObject("mainWindow").Cast().(*gtk.Window)
 	mainWindow.SetDefaultSize(400, 200)
+	mainWindow.SetTitle("Workshop Fetcher")
 	// entry with mod app id
 	modAppID := builder.GetObject("modAppID").Cast().(*gtk.Entry)
 	// list of the mods to download

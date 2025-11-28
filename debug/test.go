@@ -1,7 +1,7 @@
 package main
 
 import (
-	libLWD "github.com/Hydriam/LinuxWorkshopDownloader/LibLWD"
+	libLWD "github.com/Hydriam/WorkshopFetcher/LibLWD"
 )
 
 func main() {

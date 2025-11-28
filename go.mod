@@ -1,4 +1,4 @@
-module github.com/Hydriam/LinuxWorkshopDownloader
+module github.com/Hydriam/WorkshopFetcher
 
 go 1.24.5
 

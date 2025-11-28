@@ -1,4 +1,4 @@
-# LinuxWorkshopDownloader
+# WorkshopFetcher
 A Linux Gui App For Downloading Steam Workshop Elements
 
 **This app is only for gnu/linux distros, if you are on windows use: https://github.com/imwaitingnow/WorkshopDL**
